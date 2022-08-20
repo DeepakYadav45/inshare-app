@@ -6,7 +6,9 @@ connectDB();
 
 // Get all records older than 24 hours 
 async function fetchData() {
-    const files = await File.find({ createdAt: { $lt: new Date(Date.now() - 24 * 60 * 60 * 1000) } })
+    const pastDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const files = await File.find({ createdAt: { $lt: pastDate } });
+
     if (files.length) {
         for (const file of files) {
             try {
@@ -17,8 +19,9 @@ async function fetchData() {
                 console.log(`error while deleting file ${err} `);
             }
         }
+        console.log('Job done!');
     }
-    console.log('Job done!');
+
 }
 
 fetchData().then(process.exit);
