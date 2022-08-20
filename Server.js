@@ -1,12 +1,31 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const cors = require('cors');
 
-app.use('/public', express.static('public'));
+const corsOptions = {
+    origin: process.env.ALLOWED_CLIENTS.split(',')
+        // ['http://localhost:3000', 'http://localhost:5000', 'http://localhost:3300']
+}
+
+// Default configuration looks like
+// {
+//     "origin": "*",
+//     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     "preflightContinue": false,
+//     "optionsSuccessStatus": 204
+//   }
+
+app.use(cors(corsOptions))
+
+app.use(express.static('public'));
 app.use(express.json());
 
 const connectDB = require('./config/db');
 connectDB();
+
+//cors
+
 
 //Templattes engine
 app.set('views', path.join(__dirname, '/views'));
